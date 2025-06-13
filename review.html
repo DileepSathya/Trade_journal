@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review Trades</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Layout */
+        .container {
+            width: 95%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .filter-form, .search-bar, .summary {
+            margin: 20px;
+        }
+
+        /* Filter & Search Form */
+        .filter-form button, .search-bar button {
+            padding: 10px 20px;
+            background-color: #3498db;
+            border: none;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .filter-form button:hover, .search-bar button:hover {
+            background-color: #2980b9;
+        }
+
+        .search-bar form select {
+            padding: 8px;
+            margin-right: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            background-color: #fff;
+            transition: all 0.3s ease-in-out;
+        }
+        .search-bar form select:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        /* Summary Section */
+        .summary {
+            text-align: right;
+            font-weight: bold;
+            background: #dfe6e9;
+            padding: 12px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Trade Container */
+        .trade-container {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            padding: 20px;
+            transition: all 0.3s ease-in-out;
+        }
+        .trade-container:hover {
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            transform: scale(1.02);
+        }
+
+        /* Header */
+        .header {
+            background-color: #e9ecef;
+            padding: 14px;
+            cursor: pointer;
+            font-weight: bold;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+        .header:hover {
+            background-color: #3498db;
+            color: white;
+        }
+
+        /* Content Area */
+        .content {
+            display: none;
+            padding-top: 10px;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        /* Main content layout */
+        .trade-content {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .left-section {
+            flex: 1;
+            max-width: 400px;
+        }
+        
+        .right-section {
+            flex: 2;
+            min-width: 600px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Image Section */
+        .image-wrapper {
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s ease;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 15px;
+            background: #f9f9f9;
+        }
+        .image-wrapper:hover {
+            transform: scale(1.03);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        .image-wrapper img {
+            width: 100%;
+            max-width: 550px;
+            height: auto;
+            cursor: pointer;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        
+        .image-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #2c3e50;
+            font-size: 1.1em;
+        }
+
+        /* Popup */
+        .popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .popup img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 10px;
+        }
+
+        /* Hover Effect for Links */
+        .hover-link {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+        }
+        .hover-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background: #3498db;
+            transition: all 0.3s;
+            bottom: -3px;
+            left: 0;
+        }
+        .hover-link:hover::after {
+            width: 100%;
+        }
+
+        /* Notes, Mistakes, and Takeaways Sections */
+        .notes-section, .mistakes-section, .takeaways-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border: 1px solid #e9ecef;
+        }
+        
+        .notes-section h3, .mistakes-section h3, .takeaways-section h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 8px;
+        }
+        
+        .notes-content, .mistakes-content, .takeaways-content {
+            white-space: pre-line;
+            line-height: 2;
+            font-size: 1.05em;
+            color: #444;
+            background: white;
+            padding: 20px;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .notes-line, .mistakes-line, .takeaways-line {
+            display: block;
+            padding: 8px 0 8px 20px;
+            position: relative;
+            border-bottom: 1px solid #eee;
+        }
+
+        .notes-line:before, .mistakes-line:before, .takeaways-line:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #3498db;
+            font-weight: bold;
+        }
+
+        .mistakes-line:before {
+            color: #e74c3c;
+        }
+
+        .takeaways-line:before {
+            color: #27ae60;
+        }
+
+        .notes-line:last-child, .mistakes-line:last-child, .takeaways-line:last-child {
+            border-bottom: none;
+        }
+
+        /* Convert newlines to proper line breaks */
+        .notes-content br, .mistakes-content br, .takeaways-content br {
+            display: block;
+            content: "";
+            margin-top: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="filter-form">
+            <form method="POST" action="/review">
+                <button type="submit">Show All Trades</button><br><br>
+                <label>Start Date: <input type="date" name="start_date" value="{{ start_date }}"></label>
+                <label>End Date: <input type="date" name="end_date" value="{{ end_date }}"></label>
+                <button type="submit">Search</button>
+            </form>
+        </div>
+
+        <div class="search-bar">
+            <form method="POST" action="/review">
+                <label>Strategy:
+                    <select name="strategy">
+                        <option value="">All strategies</option>
+                        {% for option in strategies %}
+                            <option value="{{ option }}" {% if option == selected_strategy %}selected{% endif %}>{{ option }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+                <label>Trade Style:
+                    <select name="trade_style">
+                        <option value="">All styles</option>
+                        {% for option in trade_styles %}
+                            <option value="{{ option }}" {% if option == selected_trade_style %}selected{% endif %}>{{ option }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+                <label>Trade Type:
+                    <select name="trade_type">
+                        <option value="">All trade types</option>
+                        {% for option in trade_types %}
+                            <option value="{{ option }}" {% if option == selected_trade_type %}selected{% endif %}>{{ option }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+                <button type="submit">Search</button>
+            </form>
+        </div>
+
+        {% if no_data %}
+            <p style="margin: 20px; font-weight: bold; color: red;">No trades taken between selected dates.</p>
+        {% endif %}
+
+        {% if avg_rr is defined %}
+            <div class="summary">
+                Average Actual RR: {{ avg_rr }}
+            </div>
+        {% endif %}
+
+        {% for trade in trades %}
+        <div class="trade-container">
+            <div class="header" onclick="toggleContent(this)">
+                Trade Entered Date: {{ trade[columns.index('trade_entered_date')] }} | Time: {{ trade[columns.index('trade_entered_time')] }}
+            </div>
+            <div class="content">
+                <div class="trade-content">
+                    <div class="left-section">
+                        {% for i in range(columns|length) %}
+                            {% if not columns[i].startswith('pic_') %}
+                                <p><strong>{{ columns[i] }}:</strong> {{ trade[i] }}</p>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    <div class="right-section">
+                        {% set timeframes = ['1W', '1D', '1H', '15min', '5min', '3min', '1min'] %}
+                        {% for timeframe in timeframes %}
+                            {% set pic_column = 'pic_' + timeframe %}
+                            {% if pic_column in columns and trade[columns.index(pic_column)] %}
+                            <div class="image-wrapper">
+                                <div class="image-title">{{ trade[columns.index('asset_name')] }} {{ timeframe }}</div>
+                                <img src="data:image/png;base64,{{ trade[columns.index(pic_column)] }}" alt="{{ pic_column }}" onclick="showPopup(this.src)">
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                        {% if trade.notes %}
+                        <div class="notes-section">
+                            <h3>Trade Notes</h3>
+                            <div class="notes-content">
+                                {% for line in trade.notes.split('\n') %}
+                                    {% if line.strip() %}
+                                        <span class="notes-line">{{ line }}</span>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        {% if trade.mistakes %}
+                        <div class="mistakes-section">
+                            <h3>Mistakes</h3>
+                            <div class="mistakes-content">
+                                {% for line in trade.mistakes.split('\n') %}
+                                    {% if line.strip() %}
+                                        <span class="mistakes-line">{{ line }}</span>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        {% if trade.key_takeaways %}
+                        <div class="takeaways-section">
+                            <h3>Key Takeaways</h3>
+                            <div class="takeaways-content">
+                                {% for line in trade.key_takeaways.split('\n') %}
+                                    {% if line.strip() %}
+                                        <span class="takeaways-line">{{ line }}</span>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+        <div class="popup" id="popup">
+            <img id="popup-img" src="" alt="Popup Image">
+        </div>
+    </div>
+
+    <script>
+        function toggleContent(header) {
+            const content = header.nextElementSibling;
+            const isVisible = content.style.display === 'block';
+            content.style.display = isVisible ? 'none' : 'block';
+        }
+
+        function showPopup(src) {
+            const popup = document.getElementById('popup');
+            const popupImg = document.getElementById('popup-img');
+            popupImg.src = src;
+            popup.style.display = 'flex';
+        }
+
+        function hidePopup() {
+            document.getElementById('popup').style.display = 'none';
+        }
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === "Escape") {
+                hidePopup();
+            }
+        });
+
+        document.getElementById('popup').addEventListener('click', hidePopup);
+    </script>
+</body>
+</html>

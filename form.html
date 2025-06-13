@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trade Entry Form</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --accent: #4895ef;
+            --success: #4cc9f0;
+            --danger: #f72585;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            color: var(--dark);
+            min-height: 100vh;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .form-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-header h2 {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .form-header p {
+            opacity: 0.9;
+            font-weight: 300;
+            position: relative;
+            z-index: 2;
+        }
+
+        .form-header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            z-index: 1;
+        }
+
+        form {
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .form-section {
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .form-section.full-width {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark);
+            position: relative;
+        }
+
+        label.required::after {
+            content: "*";
+            color: var(--danger);
+            margin-left: 4px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e3e9;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8fafc;
+            transition: var(--transition);
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+            outline: none;
+            background-color: white;
+        }
+
+        input[type="file"] {
+            padding: 10px;
+            border: 2px dashed #e0e3e9;
+            background-color: white;
+        }
+
+        input[type="file"]:focus {
+            border-color: var(--accent);
+            background-color: #f8fafc;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: center;
+        }
+
+        button[type="submit"] {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 200px;
+        }
+
+        button[type="submit"]:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(67, 97, 238, 0.4);
+        }
+
+        button[type="submit"]:active {
+            transform: translateY(0);
+        }
+
+        button[type="submit"] i {
+            margin-right: 10px;
+        }
+
+        .form-navigation {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+        }
+
+        .form-step-indicator {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .step {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #e0e3e9;
+            color: var(--gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin: 0 10px;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .step.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .step.completed {
+            background-color: var(--success);
+            color: white;
+        }
+
+        .step::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 100%;
+            width: 20px;
+            height: 2px;
+            background-color: #e0e3e9;
+        }
+
+        .step:last-child::after {
+            display: none;
+        }
+
+        .form-tabs {
+            grid-column: 1 / -1;
+            display: flex;
+            border-bottom: 1px solid #e0e3e9;
+            margin-bottom: 2rem;
+        }
+
+        .tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            font-weight: 500;
+            color: var(--gray);
+            transition: var(--transition);
+        }
+
+        .tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .tab:hover {
+            color: var(--primary);
+        }
+
+        .tab-content {
+            grid-column: 1 / -1;
+            display: none;
+        }
+
+        .tab-content.active {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .input-icon {
+            position: relative;
+        }
+
+        .input-icon i {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+        }
+
+        .input-icon input {
+            padding-right: 40px;
+        }
+
+        .flash-messages {
+            grid-column: 1 / -1;
+            background-color: var(--success);
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            animation: slideInDown 0.5s ease;
+        }
+
+        @keyframes slideInDown {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .chart-upload-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .chart-upload-box {
+            border: 2px dashed #e0e3e9;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            transition: var(--transition);
+            background-color: white;
+        }
+
+        .chart-upload-box:hover {
+            border-color: var(--accent);
+            transform: translateY(-3px);
+        }
+
+        .chart-upload-box i {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .chart-upload-box p {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            form {
+                grid-template-columns: 1fr;
+                padding: 1.5rem;
+            }
+            
+            .form-header h2 {
+                font-size: 1.8rem;
+            }
+            
+            .chart-upload-container {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 1rem;
+            }
+            
+            .container {
+                border-radius: 12px;
+            }
+            
+            .form-header {
+                padding: 1.5rem 1rem;
+            }
+            
+            .chart-upload-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Custom select styling */
+        .custom-select {
+            position: relative;
+        }
+
+        .custom-select select {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            padding-right: 40px;
+        }
+
+        .custom-select::after {
+            content: "⌄";
+            position: absolute;
+            top: 50%;
+            right: 15px;
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: var(--gray);
+            font-size: 1.2rem;
+        }
+
+        /* Floating labels */
+        .float-label {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .float-label label {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            color: var(--gray);
+            transition: var(--transition);
+            pointer-events: none;
+            background: white;
+            padding: 0 5px;
+        }
+
+        .float-label input:focus + label,
+        .float-label input:not(:placeholder-shown) + label,
+        .float-label select:focus + label,
+        .float-label select:not([value=""]) + label {
+            top: -10px;
+            left: 10px;
+            font-size: 0.8rem;
+            color: var(--primary);
+            background: white;
+        }
+
+        /* Toggle switch */
+        .toggle-switch {
+            display: flex;
+            align-items: center;
+        }
+
+        .toggle-switch input {
+            display: none;
+        }
+
+        .toggle-switch label {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 30px;
+            background-color: #e0e3e9;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-bottom: 0;
+        }
+
+        .toggle-switch label::after {
+            content: "";
+            position: absolute;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background-color: white;
+            top: 2px;
+            left: 2px;
+            transition: var(--transition);
+        }
+
+        .toggle-switch input:checked + label {
+            background-color: var(--primary);
+        }
+
+        .toggle-switch input:checked + label::after {
+            left: 32px;
+        }
+
+        .toggle-switch span {
+            margin-left: 10px;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-header">
+            <h2>Trade Entry Form</h2>
+            <p>Record your trades with precision and analyze your performance</p>
+        </div>
+
+        <form action="/submit" method="POST" enctype="multipart/form-data">
+            <!-- Flash messages -->
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <div class="flash-messages">
+                        {% for message in messages %}
+                            <p>{{ message }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+            <!-- Form navigation tabs -->
+            <div class="form-tabs">
+                <div class="tab active" data-tab="basic">Basic Info</div>
+                <div class="tab" data-tab="entry">Entry Details</div>
+                <div class="tab" data-tab="exit">Exit Details</div>
+                <div class="tab" data-tab="charts">Charts & Notes</div>
+            </div>
+
+            <!-- Step indicator -->
+            <div class="form-step-indicator">
+                <div class="step active">1</div>
+                <div class="step">2</div>
+                <div class="step">3</div>
+                <div class="step">4</div>
+            </div>
+
+            <!-- Basic Info Tab -->
+            <div class="tab-content active" id="basic">
+                <div class="form-section">
+                    <label for="trade_style" class="required">Trade Style</label>
+                    <div class="custom-select">
+                        <select name="trade_style" id="trade_style" required>
+                            <option value="">Select trade style</option>
+                            <option value="Day Trade">Day Trade</option>
+                            <option value="Swing Trade">Swing Trade</option>
+                            <option value="BTST">BTST</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <label for="trade_entered_date" class="required">Trade Entered Date</label>
+                    <input type="date" name="trade_entered_date" id="trade_entered_date" required>
+                </div>
+
+                <div class="form-section">
+                    <label for="trade_entered_day">Trade Entered Day</label>
+                    <div class="input-icon">
+                        <input type="text" name="trade_entered_day" id="trade_entered_day" readonly>
+                        <i class="fas fa-calendar-day"></i>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <label for="trade_entered_time">Trade Entered Time</label>
+                    <input type="time" name="trade_entered_time" id="trade_entered_time">
+                </div>
+
+                <div class="form-section">
+                    <label for="asset_class">Asset Class</label>
+                    <input type="text" name="asset_class" id="asset_class" placeholder="e.g., Forex, Stocks, Crypto">
+                </div>
+
+                <div class="form-section">
+                    <label for="asset_name" class="required">Asset Name</label>
+                    <input type="text" name="asset_name" id="asset_name" required placeholder="e.g., EUR/USD, AAPL, BTC">
+                </div>
+
+                <div class="form-section">
+                    <label for="trade_type" class="required">Trade Type</label>
+                    <div class="custom-select">
+                        <select name="trade_type" id="trade_type" required>
+                            <option value="">Select trade type</option>
+                            <option value="Forward Test">Forward Test</option>
+                            <option value="Actual">Actual</option>
+                            <option value="Backtest">Backtest</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <label for="strategy_name">Strategy Name</label>
+                    <input type="text" name="strategy_name" id="strategy_name" placeholder="e.g., Breakout, Pullback">
+                </div>
+
+                <div class="form-section">
+                    <label for="position_side" class="required">Position Side</label>
+                    <div class="custom-select">
+                        <select name="position_side" id="position_side" required>
+                            <option value="">Select position</option>
+                            <option value="Long">Long</option>
+                            <option value="Short">Short</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <label for="quantity">Quantity</label>
+                    <div class="input-icon">
+                        <input type="number" name="quantity" id="quantity" placeholder="e.g., 100">
+                        <i class="fas fa-hashtag"></i>
+                    </div>
+                </div>
+
+                <div class="form-navigation">
+                    <button type="button" class="next-tab" data-next="entry">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <!-- Entry Details Tab -->
+            <div class="tab-content" id="entry">
+                <div class="form-section">
+                    <label for="entry_signal">Entry Signal</label>
+                    <textarea name="entry_signal" id="entry_signal" placeholder="Describe your entry signal"></textarea>
+                </div>
+
+                <div class="form-section">
+                    <label for="entry_difficulty">Entry Difficulty</label>
+                    <div class="custom-select">
+                        <select name="entry_difficulty" id="entry_difficulty">
+                            <option value="">Select difficulty</option>
+                            <option value="Easy">Easy</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Hard">Hard</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <label for="stop_level">Stop Level</label>
+                    <div class="input-icon">
+                        <input type="text" name="stop_level" id="stop_level" placeholder="Price level">
+                        <i class="fas fa-stop-circle"></i>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <label for="stop_percent">Stop %</label>
+                    <div class="input-icon">
+                        <input type="number" step="0.01" name="stop_percent" id="stop_percent" placeholder="e.g., 2.5">
+                        <i class="fas fa-percentage"></i>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <label for="target_level">Target Level</label>
+                    <div class="input-icon">
+                        <input type="text" name="target_level" id="target_level" placeholder="Price level">
+                        <i class="fas fa-bullseye"></i>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <label for="target_percent">Target %</label>
+                    <div class="input-icon">
+                        <input type="number" step="0.01" name="target_percent" id="target_percent" placeholder="e.g., 5.0">
+                        <i class="fas fa-percentage"></i>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <label for="partial_target">Partial Target</label>
+                    <input type="text" name="partial_target" id="partial_target" placeholder="Price level">
+                </div>
+
+                <div class="form-section">
+                    <label for="traded_target_percent">Traded Target %</label>
+                    <div class="input-icon">
+                        <input type="number" step="0.01" name="traded_target_percent" id="traded_target_percent" placeholder="e.g., 3.0">
+                        <i class="fas fa-percentage"></i>
+                    </div>
+                </div>
+
+                <div class="form-navigation">
+                    <button type="button" class="prev-tab" data-prev="basic"><i class="fas fa-arrow-left"></i> Previous</button>
+                    <button type="button" class="next-tab" data-next="exit">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <!-- Exit Details Tab -->
+            <div class="tab-content" id="exit">
+                <div class="form-section">
+                    <label for="trade_exit_date">Trade Exit Date</label>
+                    <input type="date" name="trade_exit_date" id="trade_exit_date">
+                </div>
+
+                <div class="form-section">
+                    <label for="trade_exit_day">Trade Exit Day</label>
+                    <div class="input-icon">
+                        <input type="text" name="trade_exit_day" id="trade_exit_day" readonly>
+                        <i class="fas fa-calendar-day"></i>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <label for="trade_exit_time">Trade Exit Time</label>
+                    <input type="time" name="trade_exit_time" id="trade_exit_time">
+                </div>
+
+                <div class="form-section">
+                    <label for="trade_result">Trade Result</label>
+                    <div class="custom-select">
+                        <select name="trade_result" id="trade_result">
+                            <option value="">Select result</option>
+                            <option value="Win">Win</option>
+                            <option value="Lose">Lose</option>
+                            <option value="BreakEven">BreakEven</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <label for="pnl">PNL</label>
+                    <div class="input-icon">
+                        <input type="number" step="0.01" name="pnl" id="pnl" placeholder="Profit/Loss amount">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <label for="expected_rr">Expected RR</label>
+                    <div class="input-icon">
+                        <input type="number" step="0.01" name="expected_rr" id="expected_rr" placeholder="Risk/Reward ratio">
+                        <i class="fas fa-balance-scale"></i>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <label for="actual_rr">Actual RR</label>
+                    <div class="input-icon">
+                        <input type="number" step="0.01" name="actual_rr" id="actual_rr" placeholder="Risk/Reward ratio">
+                        <i class="fas fa-balance-scale"></i>
+                    </div>
+                </div>
+
+                <div class="form-navigation">
+                    <button type="button" class="prev-tab" data-prev="entry"><i class="fas fa-arrow-left"></i> Previous</button>
+                    <button type="button" class="next-tab" data-next="charts">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <!-- Charts & Notes Tab -->
+            <div class="tab-content" id="charts">
+                <div class="form-section full-width">
+                    <h3 style="margin-bottom: 1rem;">Chart Uploads</h3>
+                    <div class="chart-upload-container">
+                        <label class="chart-upload-box">
+                            <i class="fas fa-chart-line"></i>
+                            <p>1 Minute Chart</p>
+                            <input type="file" name="pic_1min" accept="image/*" style="display: none;">
+                        </label>
+                        
+                        <label class="chart-upload-box">
+                            <i class="fas fa-chart-line"></i>
+                            <p>3 Minute Chart</p>
+                            <input type="file" name="pic_3min" style="display: none;">
+                        </label>
+                        
+                        <label class="chart-upload-box">
+                            <i class="fas fa-chart-line"></i>
+                            <p>5 Minute Chart</p>
+                            <input type="file" name="pic_5min" style="display: none;">
+                        </label>
+                        
+                        <label class="chart-upload-box">
+                            <i class="fas fa-chart-line"></i>
+                            <p>15 Minute Chart</p>
+                            <input type="file" name="pic_15min" style="display: none;">
+                        </label>
+
+                        <label class="chart-upload-box">
+                            <i class="fas fa-chart-line"></i>
+                            <p>1 Hour Chart</p>
+                            <input type="file" name="pic_1H" style="display: none;">
+                        </label>
+                        
+                        <label class="chart-upload-box">
+                            <i class="fas fa-chart-bar"></i>
+                            <p>1 Day Chart</p>
+                            <input type="file" name="pic_1D" style="display: none;">
+                        </label>
+                        
+                        <label class="chart-upload-box">
+                            <i class="fas fa-chart-bar"></i>
+                            <p>1 Week Chart</p>
+                            <input type="file" name="pic_1W" style="display: none;">
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-section full-width">
+                    <label for="notes">Notes</label>
+                    <textarea name="notes" id="notes" rows="8" 
+                        placeholder="Enter your notes line by line:
+- Each point on a new line
+- Start each line with a dash (-)
+- Example: - 1W makes lower highs
+- Example: - 50EMA acts as resistance"
+                        style="font-family: 'Poppins', monospace; line-height: 1.8;"
+                    ></textarea>
+                </div>
+
+                <div class="form-section full-width">
+                    <label for="mistakes">Mistakes</label>
+                    <textarea name="mistakes" id="mistakes" rows="8" 
+                        placeholder="Enter your mistakes line by line:
+- Each point on a new line
+- Start each line with a dash (-)
+- Example: - Entered too early
+- Example: - Didn't follow stop loss"
+                        style="font-family: 'Poppins', monospace; line-height: 1.8;"
+                    ></textarea>
+                </div>
+
+                <div class="form-section full-width">
+                    <label for="key_takeaways">Key Takeaways</label>
+                    <textarea name="key_takeaways" id="key_takeaways" rows="8" 
+                        placeholder="Enter your key takeaways line by line:
+- Each point on a new line
+- Start each line with a dash (-)
+- Example: - Wait for confirmation before entry
+- Example: - Always stick to stop loss"
+                        style="font-family: 'Poppins', monospace; line-height: 1.8;"
+                    ></textarea>
+                </div>
+
+                <div class="form-navigation">
+                    <button type="button" class="prev-tab" data-prev="exit"><i class="fas fa-arrow-left"></i> Previous</button>
+                    <div class="submit-btn">
+                        <button type="submit">
+                            <i class="fas fa-save"></i> Submit Trade
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Date to day conversion
+        document.getElementById('trade_entered_date').addEventListener('change', function() {
+            const dateObj = new Date(this.value);
+            const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            document.getElementById('trade_entered_day').value = days[dateObj.getUTCDay()];
+        });
+
+        document.getElementById('trade_exit_date').addEventListener('change', function() {
+            const dateObj = new Date(this.value);
+            const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            document.getElementById('trade_exit_day').value = days[dateObj.getUTCDay()];
+        });
+
+        // Tab navigation
+        const tabs = document.querySelectorAll('.tab');
+        const tabContents = document.querySelectorAll('.tab-content');
+        const steps = document.querySelectorAll('.step');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabId = tab.getAttribute('data-tab');
+                
+                // Update tabs
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                // Update content
+                tabContents.forEach(content => content.classList.remove('active'));
+                document.getElementById(tabId).classList.add('active');
+                
+                // Update steps
+                const tabIndex = Array.from(tabs).indexOf(tab);
+                steps.forEach((step, index) => {
+                    if (index <= tabIndex) {
+                        step.classList.add('active');
+                        step.classList.add('completed');
+                    } else {
+                        step.classList.remove('active');
+                        step.classList.remove('completed');
+                    }
+                });
+            });
+        });
+
+        // Next/Previous buttons
+        document.querySelectorAll('.next-tab').forEach(button => {
+            button.addEventListener('click', () => {
+                const nextTabId = button.getAttribute('data-next');
+                const nextTab = document.querySelector(`.tab[data-tab="${nextTabId}"]`);
+                nextTab.click();
+            });
+        });
+
+        document.querySelectorAll('.prev-tab').forEach(button => {
+            button.addEventListener('click', () => {
+                const prevTabId = button.getAttribute('data-prev');
+                const prevTab = document.querySelector(`.tab[data-tab="${prevTabId}"]`);
+                prevTab.click();
+            });
+        });
+
+        // File input change handler
+        document.querySelectorAll('.chart-upload-box input[type="file"]').forEach(input => {
+            input.addEventListener('change', function(e) {
+                e.stopPropagation(); // Stop event propagation
+                if (this.files && this.files[0]) {
+                    const box = this.closest('.chart-upload-box');
+                    const icon = box.querySelector('i');
+                    const text = box.querySelector('p');
+                    
+                    // Change icon and text
+                    icon.className = 'fas fa-check-circle';
+                    icon.style.color = '#06d6a0';
+                    text.textContent = this.files[0].name;
+                    text.style.color = '#06d6a0';
+                    
+                    // Add pulse animation
+                    box.style.animation = 'pulse 0.5s';
+                    setTimeout(() => {
+                        box.style.animation = '';
+                    }, 500);
+                }
+            });
+        });
+
+        // Form validation before submission
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const requiredFields = this.querySelectorAll('[required]');
+            let isValid = true;
+            
+            requiredFields.forEach(field => {
+                if (!field.value) {
+                    field.style.borderColor = '#f72585';
+                    isValid = false;
+                    
+                    // Scroll to first invalid field
+                    if (isValid === false) {
+                        field.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        isValid = true; // Prevent multiple scrolls
+                    }
+                }
+            });
+            
+            if (!isValid) {
+                e.preventDefault();
+                alert('Please fill in all required fields marked with *');
+            }
+        });
+
+        // Reset field styles when user starts typing
+        document.querySelectorAll('input, select, textarea').forEach(field => {
+            field.addEventListener('input', function() {
+                this.style.borderColor = '#e0e3e9';
+            });
+        });
+    </script>
+</body>
+</html>
